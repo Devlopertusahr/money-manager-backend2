@@ -5,7 +5,9 @@ import com.website.moneymanager2.dto.AuthDTO;
 import com.website.moneymanager2.dto.ProfileDTO;
 import com.website.moneymanager2.entity.ProfileEntity;
 import com.website.moneymanager2.repository.ProfileRepository;
+import com.website.moneymanager2.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ public class ProfileService {
   private  final EmailService emailService;
   private  final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
+  private final JwtUtil jwtUtil;
 
     public ProfileDTO registerProfile(ProfileDTO profileDTO) {
         ProfileEntity newProfile = toEntity(profileDTO);
