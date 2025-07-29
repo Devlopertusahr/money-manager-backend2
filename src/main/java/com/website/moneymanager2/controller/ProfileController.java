@@ -1,5 +1,6 @@
 package com.website.moneymanager2.controller;
 
+import com.website.moneymanager2.dto.AuthDTO;
 import com.website.moneymanager2.dto.ProfileDTO;
 import com.website.moneymanager2.service.ProfileService;
 import lombok.RequiredArgsConstructor;

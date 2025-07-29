@@ -1,6 +1,7 @@
 package com.website.moneymanager2.config;
 
 
+import com.website.moneymanager2.security.JwtRequestFilter;
 import com.website.moneymanager2.service.AppUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +29,7 @@ import java.util.List;
 public class SecurityConfig {
 
   private final AppUserDetailsService appUserDetailsService;
-
+  private final JwtRequestFilter jwtRequestFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors(Customizer.withDefaults())
