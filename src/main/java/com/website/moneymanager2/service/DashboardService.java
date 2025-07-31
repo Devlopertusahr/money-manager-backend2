@@ -18,10 +18,4 @@ public class DashboardService {
     private final ExpenseService expenseService;
     private final ProfileService profileService;
 
-    public Map<String, Object> getDashboardData() {
-        ProfileEntity profile = profileService.getCurrentProfile();
-        Map<String, Object> returnValue = new LinkedHashMap<>();
-        List<IncomeDTO> latestIncomes = incomeService.getLatest5IncomesForCurrentUser();
-        List<ExpenseDTO> latestExpenses = expenseService.getLatest5ExpensesForCurrentUser();
-        List<RecentTransactionDTO> recentTransactions = concat(latestIncomes.stream().map(income ->
-                RecentTransactionDTO.builder()
+}
