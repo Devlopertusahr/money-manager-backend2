@@ -1,5 +1,6 @@
 package com.website.moneymanager2.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,5 +1,6 @@
 package com.website.moneymanager2.service;
 
+
 import com.website.moneymanager2.dto.CategoryDTO;
 import com.website.moneymanager2.entity.CategoryEntity;
 import com.website.moneymanager2.entity.ProfileEntity;
@@ -27,27 +28,12 @@ public class CategoryService {
         newCategory = categoryRepository.save(newCategory);
         return toDTO(newCategory);
     }
-    //get categories for current user
-    public List<CategoryDTO> getCategoriesForCurrentUser() {
-        ProfileEntity profile = profileService.getCurrentProfile();
-        List<CategoryEntity> categories = categoryRepository.findByProfileId(profile.getId());
-        return categories.stream().map(this::toDTO).toList();
-    }
-    //get categories by type for current user
-    public List<CategoryDTO> getCategoriesByTypeForCurrentUser(String type) {
-        ProfileEntity profile = profileService.getCurrentProfile();
-        List<CategoryEntity> entities = categoryRepository.findByTypeAndProfileId(type, profile.getId());
-        return entities.stream().map(this::toDTO).toList();
-    }
-    public CategoryDTO updateCategory(Long categoryId, CategoryDTO dto) {
-        ProfileEntity profile = profileService.getCurrentProfile();
-        CategoryEntity existingCategory = categoryRepository.findByIdAndProfileId(categoryId, profile.getId())
-                .orElseThrow(() -> new RuntimeException("Category not found or not accessible"));
-        existingCategory.setName(dto.getName());
-        existingCategory.setIcon(dto.getIcon());
-        existingCategory = categoryRepository.save(existingCategory);
-        return toDTO(existingCategory);
-    }
+
+
+
+
+
+
 
     //helper methods
     private CategoryEntity toEntity(CategoryDTO categoryDTO, ProfileEntity profile) {
@@ -58,7 +44,6 @@ public class CategoryService {
                 .type(categoryDTO.getType())
                 .build();
     }
-
 
     private CategoryDTO toDTO(CategoryEntity entity) {
         return CategoryDTO.builder()
@@ -73,3 +58,4 @@ public class CategoryService {
 
     }
 }
+

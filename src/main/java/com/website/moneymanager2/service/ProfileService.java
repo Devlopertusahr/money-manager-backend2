@@ -1,6 +1,5 @@
 package com.website.moneymanager2.service;
 
-
 import com.website.moneymanager2.dto.AuthDTO;
 import com.website.moneymanager2.dto.ProfileDTO;
 import com.website.moneymanager2.entity.ProfileEntity;
@@ -8,7 +7,6 @@ import com.website.moneymanager2.repository.ProfileRepository;
 import com.website.moneymanager2.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +25,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+   private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
     @Value("${app.activation.url}")
@@ -38,7 +36,7 @@ public class ProfileService {
         newProfile.setActivationToken(UUID.randomUUID().toString());
         newProfile = profileRepository.save(newProfile);
         //send activation email
-        String activationLink = activationURL+"/api/v1.0/activate?token=" + newProfile.getActivationToken();
+        String activationLink = "http://localhost:8080/api/v1.0/activate?token=" + newProfile.getActivationToken();
         String subject = "Activate your Money Manager account";
         String body = "Click on the following link to activate your account: " + activationLink;
         emailService.sendEmail(newProfile.getEmail(), subject, body);
@@ -56,7 +54,6 @@ public class ProfileService {
                 .updatedAt(profileDTO.getUpdatedAt())
                 .build();
     }
-
     public ProfileDTO toDTO(ProfileEntity profileEntity) {
         return ProfileDTO.builder()
                 .id(profileEntity.getId())
@@ -77,19 +74,16 @@ public class ProfileService {
                 })
                 .orElse(false);
     }
-
     public boolean isAccountActive(String email) {
         return profileRepository.findByEmail(email)
                 .map(ProfileEntity::getIsActive)
                 .orElse(false);
     }
-
     public ProfileEntity getCurrentProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return profileRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("Profile not found with email: " + authentication.getName()));
     }
-
     public ProfileDTO getPublicProfile(String email) {
         ProfileEntity currentUser = null;
         if (email == null) {
@@ -108,7 +102,6 @@ public class ProfileService {
                 .updatedAt(currentUser.getUpdatedAt())
                 .build();
     }
-
     public Map<String, Object> authenticateAndGenerateToken(AuthDTO authDTO) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authDTO.getEmail(), authDTO.getPassword()));
@@ -122,7 +115,6 @@ public class ProfileService {
             throw new RuntimeException("Invalid email or password");
         }
     }
+
+
 }
-
-
-
