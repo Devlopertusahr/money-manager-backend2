@@ -7,8 +7,10 @@ import com.website.moneymanager2.entity.ProfileEntity;
 import com.website.moneymanager2.repository.CategoryRepository;
 import com.website.moneymanager2.repository.IncomeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -43,11 +45,37 @@ public class IncomeService {
     }
 
 
+    //delete income by id for current user
+    public void deleteIncome(Long incomeId) {
+        ProfileEntity profile = profileService.getCurrentProfile();
+        IncomeEntity entity = incomeRepository.findById(incomeId)
+                .orElseThrow(() -> new RuntimeException("Income not found"));
+        if (!entity.getProfile().getId().equals(profile.getId())) {
+            throw new RuntimeException("Unauthorized to delete this income");
+        }
+        incomeRepository.delete(entity);
+    }
 
+    // Get latest 5 incomes for current user
+    public List<IncomeDTO> getLatest5IncomesForCurrentUser() {
+        ProfileEntity profile = profileService.getCurrentProfile();
+        List<IncomeEntity> list = incomeRepository.findTop5ByProfileIdOrderByDateDesc(profile.getId());
+        return list.stream().map(this::toDTO).toList();
+    }
 
+    // Get total incomes for current user
+    public BigDecimal getTotalIncomeForCurrentUser() {
+        ProfileEntity profile = profileService.getCurrentProfile();
+        BigDecimal total = incomeRepository.findTotalExpenseByProfileId(profile.getId());
+        return total != null ? total: BigDecimal.ZERO;
+    }
 
-
-
+    //filter incomes
+    public List<IncomeDTO> filterIncomes(LocalDate startDate, LocalDate endDate, String keyword, Sort sort) {
+        ProfileEntity profile = profileService.getCurrentProfile();
+        List<IncomeEntity> list = incomeRepository.findByProfileIdAndDateBetweenAndNameContainingIgnoreCase(profile.getId(), startDate, endDate, keyword, sort);
+        return list.stream().map(this::toDTO).toList();
+    }
 
     //helper methods
     private IncomeEntity toEntity(IncomeDTO dto, ProfileEntity profile, CategoryEntity category) {
