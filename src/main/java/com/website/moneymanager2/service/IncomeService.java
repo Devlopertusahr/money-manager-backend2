@@ -14,16 +14,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 public class IncomeService {
     private final CategoryRepository categoryRepository;
     private final IncomeRepository incomeRepository;
     private final ProfileService profileService;
-
-
-
-
 
     // Adds a new expense to the database
     public IncomeDTO addIncome(IncomeDTO dto) {
@@ -34,6 +31,7 @@ public class IncomeService {
         newExpense = incomeRepository.save(newExpense);
         return toDTO(newExpense);
     }
+
     // Retrieves all incomes for current month/based on the start date and end date
     public List<IncomeDTO> getCurrentMonthIncomesForCurrentUser() {
         ProfileEntity profile = profileService.getCurrentProfile();
@@ -43,7 +41,6 @@ public class IncomeService {
         List<IncomeEntity> list = incomeRepository.findByProfileIdAndDateBetween(profile.getId(), startDate, endDate);
         return list.stream().map(this::toDTO).toList();
     }
-
 
     //delete income by id for current user
     public void deleteIncome(Long incomeId) {
@@ -103,4 +100,3 @@ public class IncomeService {
                 .build();
     }
 }
-

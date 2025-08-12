@@ -53,9 +53,6 @@ public class CategoryService {
         return toDTO(existingCategory);
     }
 
-
-
-
     //helper methods
     private CategoryEntity toEntity(CategoryDTO categoryDTO, ProfileEntity profile) {
         return CategoryEntity.builder()
@@ -79,4 +76,3 @@ public class CategoryService {
 
     }
 }
-
