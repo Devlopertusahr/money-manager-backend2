@@ -1,20 +1,5 @@
-FROM amazoncorretto:21-alpine
-
+FROM amazoncorretto:21
 WORKDIR /app
-
-# Copy necessary files
-COPY pom.xml .
-COPY src src
-COPY mvnw .
-COPY .mvn .mvn
-
-# Build dependencies
-RUN chmod +x mvnw
-RUN ./mvnw dependency:resolve
-
-# Copy rest and build
 COPY . .
-RUN ./mvnw clean package -DskipTests
-
-# Run the application
+RUN chmod 755 mvnw && ./mvnw clean package -DskipTests
 CMD ["java", "-jar", "target/moneymanager2-0.0.1-SNAPSHOT.jar"]
