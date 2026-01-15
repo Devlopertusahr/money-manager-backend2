@@ -1,18 +1,18 @@
-FROM openjdk:17-slim
+FROM amazoncorretto:21-alpine
 
 WORKDIR /app
 
-# Copy only necessary files first (better Docker layer caching)
+# Copy necessary files
 COPY pom.xml .
 COPY src src
 COPY mvnw .
 COPY .mvn .mvn
 
-# Build dependencies first
+# Build dependencies
 RUN chmod +x mvnw
 RUN ./mvnw dependency:resolve
 
-# Copy rest of the code and build
+# Copy rest and build
 COPY . .
 RUN ./mvnw clean package -DskipTests
 
