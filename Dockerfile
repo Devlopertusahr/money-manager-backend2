@@ -1,5 +1,11 @@
-FROM amazoncorretto:21
+# ---------- BUILD STAGE ----------
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
-RUN chmod 755 mvnw && ./mvnw clean package -DskipTests
-CMD ["java", "-jar", "target/moneymanager2-0.0.1-SNAPSHOT.jar"]
+RUN mvn clean package -DskipTests
+
+# ---------- RUN STAGE ----------
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /app/target/moneymanager2-0.0.1-SNAPSHOT.jar app.jar
+CMD ["java", "-jar", "app.jar"]
